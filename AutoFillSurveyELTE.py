@@ -1,7 +1,10 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
 import time
 from collections import defaultdict
 import random
@@ -20,17 +23,20 @@ def getID(fname):
 
 def fillQues(driver, numPg):
     # targeted attributes: name, value 
+    print("Page Id: ", numPg)
 
+    wait = WebDriverWait(driver, 10)
     listElems = driver.find_elements_by_css_selector("input[type='radio']")
-    print(len(listElems))
+    print("Number of rows: ", len(listElems))
     listElems.sort(key = lambda x: (x.get_attribute('name'), x.get_attribute('value')))
     res = defaultdict(list)
     p = [0, 2]
     for i in listElems:
         name = i.get_attribute('name')
         res[name].append(i)
+    print("Debug: ", res)
     for name in res:
-        n = len(res[name])
+        element = wait.until(EC.element_to_be_clickable((By.NAME, name)))
         j = p[random.randint(0, 1)] if numPg != 0 else 4
         element = res[name][j]
         driver.execute_script("arguments[0].scrollIntoView(true)", element)
@@ -51,16 +57,16 @@ def doText(driver, name, inp):
 
 def getSubjectsID(driver):
     data = driver.page_source
-    with open('ou.ou', 'w', encoding="utf-8") as fo:
+    with open('page_with_survey.html', 'w', encoding="utf-8") as fo:
         fo.write(data)
-    return getID('ou.ou')
+    return getID('page_with_survey.html')
 
 def openNewTab(driver, url):
     driver.execute_script("window.open('%s', 'new_window')" % (url))
     time.sleep(TIME)
     driver.switch_to_window(driver.window_handles[1])
     
-    for i in range(10): # num page
+    for i in range(999): # num page
         fillQues(driver, i)
         x = doButton(driver, 'btnNext')
         if x == -1:
@@ -88,7 +94,9 @@ def solve(driver, user, pwd):
     driver.get("https://hallgato.neptun.elte.hu/main.aspx?ismenuclick=true&ctrl=1307")
     listSubject = getSubjectsID(driver)
     originalUrl = "https://unipoll.neptun.elte.hu/Survey.aspx?FillOutId=000000000&displaymode=noframe&lng=en-US"
-    print("Type something when you finished preparing")
+    print("Since the forms need permission, you have to click on Filling button first")
+    # print("Yes, I can make this one automatically also, but dunno why, mb")
+    print("After finishing preparing, type a character:")
     s = input()
     for subject in listSubject:
         subjectUrl = originalUrl.replace("000000000", subject)
