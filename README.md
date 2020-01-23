@@ -12,12 +12,13 @@ After the end of every semester, my university (ELTE) asks us to fill surveys fo
 - Browser: Firefox
 
 ## Instruction:
+- Tested on MacOS and Windows
 <!-- - Update ou.ou using the Neptun's HTML source code (https://hallgato.neptun.elte.hu/main.aspx?ctrl=h_opinion&issub=true) -->
-- Prepare username and password in a text file (really unwise, trying to find other method)
+- Prepare username and password in a text file (unwise, yep :()
 - Run AutoFillForm.py and follow the instruction
 
 ## TODO:
-[ ] Support ChromeDriver
-[ ] Refactor code
-[ ] Handle delay better
-[ ] Still have bugs regarding form
+- [ ] Support ChromeDriver
+- [ ] Refactor code
+- [ ] Handle delay better
+- [ ] Still have bugs regarding form
